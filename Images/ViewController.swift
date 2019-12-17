@@ -14,16 +14,19 @@
         var quoteArray = ["Cat 1", "Cat 2", "Cat 3", "Cat 4", "Cat 5"]
         var filenameArray = ["Unknown.jpeg", "Unknown-1.jpeg", "Unknown-2.jpeg", "Unknown-3.jpeg", "Unknown-4.jpeg"]
         var show = [true, true, true, true, true]
+        var noImageShowing = true
         
         @IBOutlet weak var ImageHandler: UIImageView!
         
         @IBOutlet weak var Label: UILabel!
 
         @IBAction func changeImages(_ sender: UIButton) {
+            noImageShowing = false
             showImage()
             index!+=1
         }
         @IBAction func randomImages(_ sender: UIButton) {
+            noImageShowing = false
             index = Int.random(in: 0...4)
             showImage()
         }
@@ -56,6 +59,10 @@
                 else{
                     return
             }
+            guard noImageShowing == false
+                else{
+                    return
+            }
             
             show[index! - 1] = false
             showImage();
@@ -68,6 +75,10 @@
         }
         
         @IBAction func showHiddenImages(_ sender: UIButton) {
+            guard noImageShowing == false
+                else {
+                    return
+            }
             if show.firstIndex(of: true) == nil || index! < 0{
                 index! = 0
             } else {
