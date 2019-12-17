@@ -3,7 +3,7 @@
     //  Images
     //
     //  Created by Yuanlun (Alan) on 12/6/19.
-    //  Copyright © 2019 Yuanlun (Alan). All rights reserved.
+    //  Copyright © 2019 Yuanlun (Alan). All rights reserved/
     //
 
     import UIKit
