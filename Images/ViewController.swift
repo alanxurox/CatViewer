@@ -20,6 +20,12 @@
         
         @IBOutlet weak var Label: UILabel!
         
+        
+        @IBAction func loop(_ sender: UIButton) {
+            var time = Timer.scheduledTimer(timeInterval: TimeInterval(1.0), target: self, selector: #selector(Action), userInfo: nil, repeats: true)
+            
+        }
+        
 
         @IBAction func tapped(_ sender: UITapGestureRecognizer) {
             guard sender.view != nil else {
@@ -119,6 +125,14 @@
             showImage()
             index!+=1
         }
+        
+        
+        @objc func Action() {
+            noImageShowing = false
+            showImage()
+            index!+=1
+        }
+        
         override func viewDidLoad() {
             super.viewDidLoad()
             // Do any additional setup after loading the view.
