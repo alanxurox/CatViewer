@@ -19,7 +19,36 @@
         @IBOutlet weak var ImageHandler: UIImageView!
         
         @IBOutlet weak var Label: UILabel!
+        
 
+        @IBAction func tapped(_ sender: UITapGestureRecognizer) {
+            guard sender.view != nil else {
+                return
+            }
+            
+            guard  ImageHandler.image != nil else {
+                return
+            }
+            
+            if sender.state == .ended {
+                let fullscreen = UIImageView(image: ImageHandler.image)
+                fullscreen.frame = UIScreen.main.bounds
+                fullscreen.contentMode = .scaleAspectFit
+                fullscreen.backgroundColor = .black
+                fullscreen.isUserInteractionEnabled = true
+                let tap = UITapGestureRecognizer(target: self, action: #selector(back(_:)))
+                fullscreen.addGestureRecognizer(tap)
+                self.view.addSubview(fullscreen)
+            }
+            
+        }
+        
+        @objc func back(_ sender: UITapGestureRecognizer) {
+            if sender.state == .ended {
+                sender.view?.removeFromSuperview()
+            }
+        }
+        
         @IBAction func changeImages(_ sender: UIButton) {
             noImageShowing = false
             showImage()
@@ -94,6 +123,8 @@
             super.viewDidLoad()
             // Do any additional setup after loading the view.
         }
+        
+        
 
 
     }
