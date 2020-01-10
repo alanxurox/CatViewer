@@ -19,6 +19,7 @@
         var looping = false
         var imageBig: UIImageView!
         
+        let defaults = UserDefaults.standard
         
         @IBOutlet weak var ImageHandler: UIImageView!
         
