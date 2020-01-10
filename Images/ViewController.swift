@@ -68,8 +68,7 @@
             if sender.state == .ended {
                 fullscreen = false
                 sender.view?.removeFromSuperview()
-                ImageHandler.image = UIImage(named: filenameArray[index!])
-                Label.text = quoteArray[index!]
+                showImage()
                 
             }
         }
