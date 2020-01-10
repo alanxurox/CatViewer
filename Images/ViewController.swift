@@ -15,17 +15,23 @@
         var filenameArray = ["Unknown.jpeg", "Unknown-1.jpeg", "Unknown-2.jpeg", "Unknown-3.jpeg", "Unknown-4.jpeg"]
         var show = [true, true, true, true, true]
         var noImageShowing = true
+        var fullscreen = false
+        var looping = false
+        var imageBig: UIImageView!
+        
         
         @IBOutlet weak var ImageHandler: UIImageView!
         
         @IBOutlet weak var Label: UILabel!
         
+        var time = Timer()
+        
         
         @IBAction func loop(_ sender: UIButton) {
-            var time = Timer.scheduledTimer(timeInterval: TimeInterval(1.0), target: self, selector: #selector(Action), userInfo: nil, repeats: true)
+            looping = true
+            time = Timer.scheduledTimer(timeInterval: TimeInterval(1.0), target: self, selector: #selector(Action), userInfo: nil, repeats: true)
             
         }
-        
 
         @IBAction func tapped(_ sender: UITapGestureRecognizer) {
             guard sender.view != nil else {
@@ -37,21 +43,33 @@
             }
             
             if sender.state == .ended {
-                let fullscreen = UIImageView(image: ImageHandler.image)
-                fullscreen.frame = UIScreen.main.bounds
-                fullscreen.contentMode = .scaleAspectFit
-                fullscreen.backgroundColor = .black
-                fullscreen.isUserInteractionEnabled = true
+                fullscreen = true
+                
+                imageBig = UIImageView(image: ImageHandler.image)
+                
                 let tap = UITapGestureRecognizer(target: self, action: #selector(back(_:)))
-                fullscreen.addGestureRecognizer(tap)
-                self.view.addSubview(fullscreen)
+                
+                makeFullScreen(imageBig)
+                imageBig.addGestureRecognizer(tap)
+                self.view.addSubview(imageBig)
             }
             
+        }
+        func makeFullScreen(_ image: UIImageView) {
+            image.frame = UIScreen.main.bounds
+            image.contentMode = .scaleAspectFit
+            image.backgroundColor = .black
+            image.isUserInteractionEnabled = true
+
         }
         
         @objc func back(_ sender: UITapGestureRecognizer) {
             if sender.state == .ended {
+                fullscreen = false
                 sender.view?.removeFromSuperview()
+                ImageHandler.image = UIImage(named: filenameArray[index!])
+                Label.text = quoteArray[index!]
+                
             }
         }
         
@@ -83,9 +101,14 @@
                 }
             }
             
-            ImageHandler.image = UIImage(named: filenameArray[index!])
+            if fullscreen && looping {
+                imageBig.image = UIImage(named: filenameArray[index!])
+            } else {
+                ImageHandler.image = UIImage(named: filenameArray[index!])
+            }
+            
             Label.text = quoteArray[index!]
-
+                
         }
         
         
@@ -133,6 +156,10 @@
             index!+=1
         }
         
+        @IBAction func stopAction(_ sender: UIButton) {
+            time.invalidate()
+            looping = false
+        }
         override func viewDidLoad() {
             super.viewDidLoad()
             // Do any additional setup after loading the view.
