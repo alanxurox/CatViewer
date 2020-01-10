@@ -68,6 +68,7 @@
             if sender.state == .ended {
                 fullscreen = false
                 sender.view?.removeFromSuperview()
+                index!-=1
                 showImage()
                 
             }
