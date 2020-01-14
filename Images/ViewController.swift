@@ -18,6 +18,9 @@
         var fullscreen = false
         var looping = false
         var imageBig: UIImageView!
+        let data = UserDefaults.standard
+        
+
         
         let defaults = UserDefaults.standard
         
@@ -28,10 +31,19 @@
         var time = Timer()
         
         
+        
+        
         @IBAction func loop(_ sender: UIButton) {
             looping = true
             time = Timer.scheduledTimer(timeInterval: TimeInterval(1.0), target: self, selector: #selector(Action), userInfo: nil, repeats: true)
+            data.set(looping, forKey: "SavedLooping")
             
+        }
+        
+        func loop() {
+            looping = true
+            time = Timer.scheduledTimer(timeInterval: TimeInterval(1.0), target: self, selector: #selector(Action), userInfo: nil, repeats: true)
+            data.set(looping, forKey: "SavedLooping")
         }
 
         @IBAction func tapped(_ sender: UITapGestureRecognizer) {
@@ -53,9 +65,23 @@
                 makeFullScreen(imageBig)
                 imageBig.addGestureRecognizer(tap)
                 self.view.addSubview(imageBig)
+                
+                data.set(fullscreen, forKey: "SavedFullscreen")
             }
             
         }
+        
+        func tapped() {
+            
+            imageBig = UIImageView(image: ImageHandler.image)
+            
+            let tap = UITapGestureRecognizer(target: self, action: #selector(back(_:)))
+            
+            makeFullScreen(imageBig)
+            imageBig.addGestureRecognizer(tap)
+            self.view.addSubview(imageBig)
+        }
+        
         func makeFullScreen(_ image: UIImageView) {
             image.frame = UIScreen.main.bounds
             image.contentMode = .scaleAspectFit
@@ -70,7 +96,8 @@
                 sender.view?.removeFromSuperview()
                 index!-=1
                 showImage()
-                
+                data.set(fullscreen, forKey: "SavedFullscreen")
+                data.set(index, forKey: "SavedIndex")
             }
         }
         
@@ -78,11 +105,14 @@
             noImageShowing = false
             showImage()
             index!+=1
+            data.set(index, forKey: "SavedIndex")
         }
         @IBAction func randomImages(_ sender: UIButton) {
             noImageShowing = false
             index = Int.random(in: 0...4)
             showImage()
+            index!+=1
+            data.set(index, forKey: "SavedIndex")
         }
         
         func showImage() {
@@ -90,6 +120,11 @@
                 else{
                     return
             }
+            
+            if index! < 0 {
+                index = 0
+            }
+            
             if index! > quoteArray.count - 1{
                 index = show.firstIndex(of: true)!
                 }
@@ -109,7 +144,7 @@
             }
             
             Label.text = quoteArray[index!]
-                
+            data.set(index, forKey: "SavedIndex")
         }
         
         
@@ -131,6 +166,8 @@
                 Label.text = ""
             }
             index!+=1
+            data.set(show, forKey: "SavedHidden")
+            data.set(index, forKey: "SavedIndex")
         }
         
         @IBAction func showHiddenImages(_ sender: UIButton) {
@@ -148,6 +185,8 @@
             }
             showImage()
             index!+=1
+            data.set(show, forKey: "SavedHidden")
+            data.set(index, forKey: "SavedIndex")
         }
         
         
@@ -155,15 +194,34 @@
             noImageShowing = false
             showImage()
             index!+=1
+            data.set(index, forKey: "SavedIndex")
         }
         
         @IBAction func stopAction(_ sender: UIButton) {
             time.invalidate()
             looping = false
+            data.set(looping, forKey: "SavedLooping")
         }
         override func viewDidLoad() {
             super.viewDidLoad()
             // Do any additional setup after loading the view.
+            show = data.array(forKey: "SavedHidden") as! [Bool]
+            
+            looping = data.bool(forKey: "SavedLooping")
+            fullscreen = data.bool(forKey: "SavedFullscreen")
+            index = data.integer(forKey: "SavedIndex") - 1
+
+            
+            if looping {
+                loop()
+            }
+            
+            if fullscreen {
+                tapped()
+            }
+            
+            showImage()
+            
         }
         
         
