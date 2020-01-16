@@ -205,11 +205,15 @@
         override func viewDidLoad() {
             super.viewDidLoad()
             // Do any additional setup after loading the view.
-            show = data.array(forKey: "SavedHidden") as! [Bool]
+            let array = data.array(forKey: "SavedHidden")
             
-            looping = data.bool(forKey: "SavedLooping")
-            fullscreen = data.bool(forKey: "SavedFullscreen")
-            index = data.integer(forKey: "SavedIndex") - 1
+            show = array as? [Bool] ?? [true, true, true, true, true]
+            
+            looping = data.bool(forKey: "SavedLooping") ?? false
+            
+            fullscreen = data.bool(forKey: "SavedFullscreen") ?? false
+            
+            index = data.integer(forKey: "SavedIndex") - 1 ?? 0
 
             
             if looping {
