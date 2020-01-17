@@ -14,7 +14,6 @@
         var quoteArray = ["Cat 1", "Cat 2", "Cat 3", "Cat 4", "Cat 5"]
         var filenameArray = ["Unknown.jpeg", "Unknown-1.jpeg", "Unknown-2.jpeg", "Unknown-3.jpeg", "Unknown-4.jpeg"]
         var show = [true, true, true, true, true]
-        var noImageShowing = true
         var fullscreen = false
         var looping = false
         var imageBig: UIImageView!
@@ -34,6 +33,9 @@
         
         
         @IBAction func loop(_ sender: UIButton) {
+            guard !looping else {
+                return
+            }
             looping = true
             time = Timer.scheduledTimer(timeInterval: TimeInterval(1.0), target: self, selector: #selector(Action), userInfo: nil, repeats: true)
             data.set(looping, forKey: "SavedLooping")
@@ -102,13 +104,11 @@
         }
         
         @IBAction func changeImages(_ sender: UIButton) {
-            noImageShowing = false
             showImage()
             index!+=1
             data.set(index, forKey: "SavedIndex")
         }
         @IBAction func randomImages(_ sender: UIButton) {
-            noImageShowing = false
             index = Int.random(in: 0...4)
             showImage()
             index!+=1
@@ -151,14 +151,19 @@
         @IBAction func hideImages(_ sender: UIButton) {
             guard show.firstIndex(of: true) != nil
                 else{
+                    print("no images are showing currently")
                     return
             }
-            guard noImageShowing == false
-                else{
-                    return
+
+            if index! <= 0{
+                print((index!))
+                index! = 0
+                show[index!] = false
+            } else {
+                print(index!)
+                show[index! - 1] = false
             }
-            
-            show[index! - 1] = false
+
             showImage();
             
             if show.firstIndex(of: true) == nil {
@@ -171,10 +176,6 @@
         }
         
         @IBAction func showHiddenImages(_ sender: UIButton) {
-            guard noImageShowing == false
-                else {
-                    return
-            }
             if show.firstIndex(of: true) == nil || index! < 0{
                 index! = 0
             } else {
@@ -191,7 +192,6 @@
         
         
         @objc func Action() {
-            noImageShowing = false
             showImage()
             index!+=1
             data.set(index, forKey: "SavedIndex")
@@ -209,6 +209,8 @@
             
             show = array as? [Bool] ?? [true, true, true, true, true]
             
+            print(show)
+            
             looping = data.bool(forKey: "SavedLooping") ?? false
             
             fullscreen = data.bool(forKey: "SavedFullscreen") ?? false
@@ -225,6 +227,7 @@
             }
             
             showImage()
+            index!+=1
             
         }
         
