@@ -4,7 +4,7 @@
     //
     //  Created by Yuanlun (Alan) on 12/6/19.
     //  Copyright © 2019 Yuanlun (Alan). All rights reserved/
-    //
+    //  Edit on the new branch
 
     import UIKit
 
@@ -29,8 +29,11 @@
         
         var time = Timer()
         
+        //Test: checkout from origin master and work in ViewController-edits
         
-        
+        func thisDoesntdoAnything() {
+            return
+        }
         
         @IBAction func loop(_ sender: UIButton) {
             guard !looping else {
@@ -204,6 +207,7 @@
         }
         override func viewDidLoad() {
             super.viewDidLoad()
+            thisDoesntdoAnything()
             // Do any additional setup after loading the view.
             let array = data.array(forKey: "SavedHidden")
             
